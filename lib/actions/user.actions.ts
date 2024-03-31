@@ -7,7 +7,7 @@ import { handleError } from "../utils"
 export const createUser = async (user: CreateUserParams) => {
     try {
         const preUser = await prisma.user.findFirst({ where: { clerkId: user.clerkId } })
-        if (!preUser) return JSON.parse(JSON.stringify(preUser))
+        if (preUser) return JSON.parse(JSON.stringify(preUser))
 
         const newUser: IUser = {
             clerkId: user.clerkId,
@@ -29,7 +29,7 @@ export const getUser = async (clerkId: string) => {
     try {
         const user = await prisma.user.findFirst({ where: { clerkId: clerkId } })
 
-        if (user) throw new Error("User not found")
+        if (!user) throw new Error("User not found")
 
         return JSON.parse(JSON.stringify(user))
     } catch (e) {
@@ -80,7 +80,7 @@ export const updateBalance = async (clerkId: string, newBalance: number) => {
         })  
 
         if (!updatedUser) throw new Error("Could not update the balance of the user")
-         
+
         return JSON.parse(JSON.stringify(updatedUser));
     } catch (e) {
         handleError(e);
