@@ -47,7 +47,7 @@ export const updateUser = async (clerkId: string, user: UpdateUserParams) => {
                 name: user.name,
             }
         }) 
-        if (!updateUser) throw new Error("Could not update the user")
+        if (!updatedUser) throw new Error("Could not update the user")
 
         return JSON.parse(JSON.stringify(updateUser))
     } catch (e) {
@@ -57,12 +57,14 @@ export const updateUser = async (clerkId: string, user: UpdateUserParams) => {
 
 export const deleteUser = async (clerkId: string) => {
     try {
-        const deletedUser = await prisma.user.delete({
+        await prisma.user.delete({
             where: {
                 clerkId: clerkId,
             },
         })  
-        return JSON.parse(JSON.stringify(deletedUser));
+        return {
+            message: "User deleted successfully"
+        }
     } catch (e) {
         handleError(e);
     }
